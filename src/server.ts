@@ -35,7 +35,9 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   // Displays a simple message to the user
   app.get( "/filteredimage/:image_url?", async ( req, res ) => {
 
-    var paths=[]
+    var validUrl = require('valid-url');
+
+    let paths = new Array();
     //paths.push('/Users/mehdibenyebka/udacity/cloud/cloud-developer/course-02/project/image-filter-starter-code/src/util/tmp/filtered.350.jpg')
     //deleteLocalFiles(paths)
 
@@ -48,32 +50,28 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
     if(url){
 
-      console.log("** Getting the image ... ",url)
+      if (validUrl.isUri(url)){
+        console.log('Looks like an URI');
+        console.log("** Getting the image ... ",url)
+        filteredPath = await filterImageFromURL(url)
+        console.log("** filteredPath = ",filteredPath)
 
-    filteredPath = await filterImageFromURL(url)
-    console.log("** filteredPath = ",filteredPath)
+        res.sendFile(filteredPath,function (err) {
+          if (err) {
+          console.log(res.statusMessage);
+          } else {
+            paths.push(filteredPath);
+            deleteLocalFiles(paths)
+          }
+        })
 
+      } 
+      else {
+          console.log('Not a URI');
+      }
     }
 
-     
-    //res.send("try GET /filteredimage?image_url={{}}")
-    res.sendFile(filteredPath,function (err) {
-      if (err) {
-        next(err)
-      } else {
-        console.log('** Deleting : ', filteredPath)
-        paths.push(filteredPath);
-        deleteLocalFiles(paths)
-      }
-    })
-    
-    
       } );
-
-  app.get( "/image", async ( req, res ) => {
-      console.log("** Hello World **");
-      res.status(200).send("HELLO WORLD!");
-  } );
 
   // Start the Server
   app.listen( port, () => {
