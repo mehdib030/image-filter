@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
+import { Router, Request, Response } from 'express';
 
 (async () => {
 
@@ -33,18 +34,16 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   
   // Root Endpoint
   // Displays a simple message to the user
-  app.get( "/filteredimage/:image_url?", async ( req, res ) => {
+  app.get( "/filteredimage/:image_url?", async ( req:Request, res:Response ) => {
 
-    var validUrl = require('valid-url');
+    const validUrl = require('valid-url');
 
-    let paths = new Array();
-    //paths.push('/Users/mehdibenyebka/udacity/cloud/cloud-developer/course-02/project/image-filter-starter-code/src/util/tmp/filtered.350.jpg')
-    //deleteLocalFiles(paths)
-
+    let paths = new Array<string>();
+   
     console.log("** Getting image **")
-    let  url  = req.query.image_url;
+    let  url:string  = req.query.image_url;
 
-    let filteredPath =  "";
+    let filteredPath:string =  "";
 
     console.log("** Getting image URL :",url)
 
@@ -58,20 +57,18 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
         res.sendFile(filteredPath,function (err) {
           if (err) {
-          console.log(res.statusMessage);
+            console.log(res.statusMessage);
           } else {
             paths.push(filteredPath);
-            deleteLocalFiles(paths)
+            deleteLocalFiles(paths);
           }
         })
-
       } 
       else {
           console.log('Not a URI');
       }
     }
-
-      } );
+    } );
 
   // Start the Server
   app.listen( port, () => {
