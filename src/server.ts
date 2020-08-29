@@ -40,20 +40,16 @@ import { Router, Request, Response } from 'express';
 
     let paths = new Array<string>();
    
-    console.log("** Getting image **")
     let  url:string  = req.query.image_url;
 
     let filteredPath:string =  "";
-
-    console.log("** Getting image URL :",url)
-
+    
     if(url){
 
       if (validUrl.isUri(url)){
         console.log('Looks like an URI');
         console.log("** Getting the image ... ",url)
         filteredPath = await filterImageFromURL(url)
-        console.log("** filteredPath = ",filteredPath)
 
         res.sendFile(filteredPath,function (err) {
           if (err) {
