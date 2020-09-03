@@ -32,3 +32,7 @@ export async function deleteLocalFiles(files:Array<string>){
         fs.unlinkSync(file);
     }
 }
+
+export function sum(a:number, b:number) {
+    return a + b;
+  }
